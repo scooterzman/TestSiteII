@@ -1,0 +1,65 @@
+CCS - image transparency
+
+img {
+     opacity: 0.4;
+     filter: alpha(opacity=40); /* For IE8 and earlier */
+ }
+
+img:hover {
+     opacity: 1.0;
+     filter: alpha(opacity=100); /* For IE8 and earlier */
+ }
+
+
+Create a block
+--------------------------------------------------------------------------------
+
+<div style="background-color:grey; color:white; margin:20px; padding:20px; opacity: 0.4">
+
+	<h2>Who are we?</h2>
+
+	<p>
+	Or more like it, who am I. We'll I'm a guy who tried to start a consulting business. Not great at sales. Good at data analysis and 	application design, who is now trying his hand at web development and cloud applications"
+	</p>
+
+</div>
+
+
+Positioning
+----------------------------------------------------------------------------------
+
+p.myclass {
+    position: fixed;
+    top: 30%;        /*could be 30px - but using percents seem safer than pixels*/
+    right: 10%;
+    color: red;
+}
+
+<p class="myclass">Some positioned text.</p>
+
+h2 {
+    position: absolute;
+    left: 100px;
+    top: 150px;
+}
+<p>With absolute positioning, an element can be placed anywhere on a page. The heading below is placed 100px from the left of the page and 150px from the top of the page.</p>
+
+------ stacking
+
+img {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: -1;
+}
+
+<h1>This is a heading</h1>
+<img src="w3css.gif" width="100" height="140">
+<p>Because the image has a z-index of -1, it will be placed behind the text.</p>
+
+
+
+
+
+
+

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+     html { 
+  	background: url("photos/Seagulls.JPG") no-repeat center center fixed; 
+  	-webkit-background-size: cover;
+  	-moz-background-size: cover;
+  	-o-background-size: cover;
+  	background-size: cover;
+      }
+</style>
+
+<head>
+
+  <title>Wealth Simulation</title>
+  <link href="Site.css" rel="stylesheet">
+
+  <style>
+
+  .formlabel {
+              width: 250px;
+        margin-left: 50 px;
+      margin-bottom: 12 px;
+               float: left;
+          text-align: left;
+               clear: left;
+  }	
+
+  .formlabel2 {
+              width: 125px;
+        margin-left: 50 px;
+      margin-bottom: 12 px;
+               float: left;
+          text-align: left;
+               clear: left;
+  }
+
+ 
+
+  .formfield {
+	margin-bottom: 12 px;
+                float: left;
+      	   text-align: left;
+		 //size: 10; doesn't work
+  }
+
+
+  .formws {
+	width: 30%;   
+	height: 500px;
+	padding: 25px;
+	float: left;
+	clear: left; //The clear property specifies which sides of an element other floating elements are not allowed
+	// border-style: solid;
+	// border-width: 1px;
+	// border-color: red;	
+	
+  }
+
+  .formbg {
+	width: 30%;
+	padding: 25px;
+	float: left;
+	clear: right;
+	// border-style: solid;
+	// border-width: 1px;
+	// border-color: red;	
+	
+  }
+
+	#budgetjsonstore {
+ 		position: fixed;
+		top: 500px;
+		left: 20px;
+
+	}
+
+	#annualstore {
+		position: fixed;
+		top: 700px;
+		left: 20px;
+	}
+
+  </style>
+
+  <script>
+	
+	function budgetgrowth() {
+	      var years =  parseFloat(document.getElementById('annalysisyears').value);
+	      var text = document.getElementById('budgetjsonstore').innerHTML;
+	      var obj = JSON.parse(text);
+	      var i;
+	      var j;
+	      var str = '{ "AnnualExp" : [';
+	      var yearnow = 2014;
+	      var val = 0;
+	      var propcnt = 8;
+
+	      for(i = 0; i < years; i++){
+		   
+		   yearnow ++
+		   str += '{"Year":"' + yearnow + '",';
+		   
+                   // note: obj.length will not work
+		   for(j = 0; j < obj.budgetall.length; j++){
+
+			//create new array here
+
+			//create new object
+
+			//create new JSON string
+			
+			val = parseFloat(obj.budgetall[j].Val) + parseFloat(obj.budgetall[j].Val) * (Math.pow(1 + parseFloat(obj.budgetall[j].Growth), i) - 1);
+			str += '"' + obj.budgetall[j].Category + '":"' + val + '",';
+			
+		   }
+		   
+		   str = str.slice(0,-1);  // this slices off the comma added after the last elemen was added
+		   str += '},';
+			
+	      }
+	      	
+
+		str = str.slice(0,-1);  // this slices off the comma added after the last elemen was added
+		str += ']}';
+
+		document.getElementById('annualstore').innerHTML = str;
+	      
+	}
+	
+
+	function BudgetTable() {
+	     var text = document.getElementById('annualstore').innerHTML;
+    	     var budget = JSON.parse(text);
+	     var expenses = document.getElementById('budgetjsonstore').innerHTML;
+	     var exp = JSON.parse(expenses);
+    	     var i;
+             var j;
+	     
+ 	     var x = document.createElement("TABLE");
+    	     x.setAttribute("id", "BudgetTable");
+             document.body.appendChild(x);
+	     
+	     // create year header
+	     
+	     var y = document.createElement("TR");
+             y.setAttribute("id", "headers");
+             document.getElementById("BudgetTable").appendChild(y);
+
+             for(i = 0; i < budget.AnnualExp.length; i++) {
+                
+		var z = document.createElement("TD");
+                var t = document.createTextNode(budget.AnnualExp[i].Year); // put values here
+                z.appendChild(t);
+                document.getElementById("headers").appendChild(z);
+
+             }
+
+	     for(i = 0; i < exp.budgetall.length; i++) {
+                
+		var y = document.createElement("TR");
+             	y.setAttribute("id", exp.budgetall[i].Category);
+             	document.getElementById("BudgetTable").appendChild(y);
+
+		for (j = 0; j < budget.AnnualExp.length; j++) {
+		     var rowB = budget.AnnualExp[j]
+    	     	     var z = document.createElement("TD");
+		     var cat = exp.budgetall[i].Category
+             	     var t = document.createTextNode(rowB[cat]); // put values here
+             	     z.appendChild(t);
+             	     document.getElementById(exp.budgetall[i].Category).appendChild(z);
+		
+		}
+
+             }
+
+             document.getElementById("budtable").innerHTML = x;
+        }
+
+  	function wealthsim() {
+
+		var assets = document.getElementById('liquidworth').value;
+		var income = document.getElementById('currincome').value;
+		var expenses = document.getElementById('sumexpenses').value;
+		var answer = income - expenses;
+
+		return answer;
+
+ 	}
+	
+
+
+	function budget() {
+
+		var answer = parseFloat(document.getElementById('bFood').value) +
+			     parseFloat(document.getElementById('bRent').value) +
+			     parseFloat(document.getElementById('bUtil').value) +
+			     parseFloat(document.getElementById('bWell').value) +
+			     parseFloat(document.getElementById('bTrans').value) +	
+			     parseFloat(document.getElementById('bEnter').value) +
+			     parseFloat(document.getElementById('bStuff').value) + 	
+			     parseFloat(document.getElementById('bTravel').value);
+		return answer;
+		
+ 	}
+	
+	// below is working
+	function budgetsum() {
+		var bForm = document.getElementById("bgForm");
+		var elemR = bForm.getElementsByClassName("raw");
+		var elemP = bForm.getElementsByClassName("per");
+		var elemV = bForm.getElementsByClassName("val");
+		var elemG = bForm.getElementsByClassName("gr");
+		var i = 0;
+		var sumb = 0;
+		var str = '{ "budgetall" : [';
+
+		for(i = 0; i < elemR.length; i++)
+        	{
+			if(elemP[i].value == 'Monthly') {
+				elemV[i].value = parseFloat(elemR[i].value) * 12;
+    			}
+			else{
+				elemV[i].value = parseFloat(elemR[i].value);
+			}
+
+			sumb += parseFloat(elemV[i].value);
+			
+			str += '{"Category":"' + elemR[i].name + '",'+ 
+					    '"Val":"' + elemV[i].value + '",'+ '"Growth":"' + elemG[i].value + '" },';
+
+		}
+		
+		str = str.slice(0,-1) // this slices off the comma added after the last elemen was added
+		str += ']}';
+
+		document.getElementById('bTotalF').value = sumb;
+		document.getElementById('budgetjsonstore').innerHTML = str;
+ 	}
+
+	/*function budgetsum() {
+		var bForm = document.getElementById("bgForm");
+		var elemR = bForm.getElementsByClassName("raw");
+		
+		document.getElementById('bTotalF').value = elemR.length;
+	}*/
+	
+	function MakeBudgetArray() {
+        	//var str = 0;
+        	var bForm = document.getElementById("bgForm");
+		var elem = bForm.getElementsByTagName("input");
+		var i = 0;
+		var str = '{ "budget" : [';
+		
+		
+        	for(i = 0; i < elem.length; i++)
+        	{
+			
+			// create json string in here
+
+            		/* str += "<b>Type:</b>" + elem[i].type + "&nbsp&nbsp";
+            		str += "<b>Name:</b>" + elem[i].name + "&nbsp;&nbsp;";
+            		str += "<b>Value:</b><i>" + elem[i].value + "</i>&nbsp;&nbsp;";
+            		str += "<BR>"; */
+			
+			if(elem[i].type.toLowerCase() == 'text') {
+
+				str += '{"Category":"' + elem[i].name + '",'+ 
+					    '"Val":"' + elem[i].value +'" },';
+                                           
+
+        			//str += parseFloat(elem[i].value);
+    			}
+
+
+        	}
+		
+		str = str.slice(0,-1) // this slices off the comma added after the last elemen was added
+		str += ']}';
+
+		// str = elem.length
+        	document.getElementById('Test_Function').innerHTML = str;
+    	}
+
+	
+	// this works!
+	function JasonTest() {
+		var text = document.getElementById('Test_Function').innerHTML;
+		var obj = JSON.parse(text);
+		return alert(obj.budget[0].Category + " " + obj.budget[0].Val);
+	
+	}
+	
+
+
+	/* why doesnt this work - even makes budget() inoperable when not commented out
+		
+	function convToZero(y) {
+		 // If (x==Null || x == "") {
+		 //	return parseFloat("0");
+		 // }Else{
+			return parseFloat(y);
+		 //}
+	}
+	*/
+	
+	
+
+  </script>
+
+</head>
+
+<body>
+
+<!-- see http://www.w3schools.com/css/css_navbar.asp for Nav bar -->
+
+  <div id="main">
+  	<h1>Wealth Simulation</h1>
+  </div>
+
+  
+  <div class = "formws">
+  <form name="wsForm" id="wsForm">
+
+  <!-- note: adding fieldset created a boarder around form and got form class CSS formatting to work. it didn't before that. -->
+  <fieldset>
+
+	<!-- note: the function didnt wrk until id's were added to the input box, name wasn't enough. Don't need value to be initialized -->
+
+	<div class = "formlabel">Liquid Net Worth:</div>
+	<div class = "formfield"><input type="text" name="liquidworth" value=120000 id="liquidworth"></div>
+	
+	<div class = "formlabel">Real Estate:</div>
+	<div class = "formfield"><input type="text" name="nonliqworth"></div>
+
+	<div class = "formlabel">Current Income:</div>
+	<div class = "formfield"><input type="text" name="currincome" value=50000 id="currincome"></div>
+
+	<div class = "formlabel">Guarant. Retire Inc per mo:</div>
+	<div class = "formfield"><input type="text" name="garRetInc" value=3000 id="garRetInc"></div>
+
+	<div class = "formlabel">Sum of Expense:</div>
+	<div class = "formfield"><input type="text" name="sumexpenses" value=30000 id="sumexpenses"></div>
+
+	<div class = "formlabel">Years till retirement:</div>
+	<div class = "formfield"><input list="text" name="retirementyears" value=10 id="retirementyears"><br></div>
+	
+	<div class = "formlabel">Years in Analysis:</div>
+	<div class = "formfield"><input type="text" name="annalysisyears" value=40 id="annalysisyears"></div>
+
+	<div class = "formlabel">Desired Terminal Value:</div>
+	<div class = "formfield"><input type="text" name="terminalval" value=0 id="terminalval"></div>
+
+	<div class = "formlabel">Number of Simulations:</div>
+	<div class = "formfield"><input list="iteration_vals" name="sim_iterations" value=1000 id="sim_iterations"><br></div>
+
+	
+	<!--- Not working yet, is supported by IE11 - OK, is now changed type above to list
+	---->
+
+	<datalist id="iteration_vals">
+   		<option value=500>
+   		<option value=1000>
+   		<option value=5000>
+   		<option value=10000>
+	</datalist>
+	
+	<div class = "formlabel">Expense Schedule</div>
+	<div class = "formfield">
+		<input type="radio" name="expenseshedule" value ="Basic" />Basic<br />
+		<input type="radio" name="expenseshedule" value ="Detailed" />Detailed<br />
+	</div>
+
+	<div class = "formlabel">Other Tax Related Options</div>
+	<div class = "formfield">
+		<input type="checkbox" name="tax_questions[]" value ="Itemize" />Itemize on 1040 Schedule A?<br />
+		<input type="checkbox" name="tax_questions[]" value ="401K Contribution" />Do you make 401K contributions?<br />
+		<input type="checkbox" name="tax_questions[]" value ="401K Employer Match" />Does your employer match 401k?<br />
+	</div>
+
+	<div class = "formlabel">Simulation Option</div>
+	<div class = "formfield">
+		<input type="radio" name="sim_option" value ="Random" />Random-Normally Distributed<br />
+		<input type="radio" name="sim_option" value ="selected_percentile" />Selected Percentile<br />
+		<input type="radio" name="sim_option" value ="selected_percentile" />Random - Within Selected Standard Deviations<br />
+	</div>
+
+	 <input type="button" value= "Run Sim!" onclick='document.getElementById("answer").innerHTML=wealthsim()'/>
+
+  </fieldset> 
+  </form>
+  </div>
+
+  <p id ="answer"></p>
+
+ 
+  <div class = "formbg">
+  <form name="budgForm" id="bgForm">
+
+	<!---
+			
+	--->
+  <fieldset>
+	<div class = "formlabel2">Food:</div>
+	<div class = "formfield"><input type="text" name="Food" value=400 id="bFood" size=10 class="raw"></div>
+	
+	<div class = "formfield"><select name="Food_Period" class="per">
+			<option value="Monthly" >Monthly</option>
+			<option value="Annual" >Annual</option>
+	</select></div>
+	<div class = "formfield"><input type="text" name="FoodAV" value=0 id="bFoodAV" size=10 class="val"></div>
+	<div class = "formfield"><input type="text" name="FoodGr" value=.03 id="bFoodGr" size=10 class="gr"></div>
+
+
+	<div class = "formlabel2">Rent:</div>
+	<div class = "formfield"><input type="text" name="Rent" value=450 id="bRent" size=10 class="raw"></div>
+
+	<div class = "formfield"><select name="Rent_Period" class="per">
+			<option value="Monthly" selected>Monthly</option>
+			<option value="Annual">Annual</option>
+	</select></div>
+	<div class = "formfield"><input type="text" name="RentAV" value=0 id="bRentAV" size=10 class="val"></div>
+	<div class = "formfield"><input type="text" name="RentGr" value=.03 id="bRentGr" size=10 class="gr"></div>
+
+	<div class = "formlabel2">Utilies:</div>
+	<div class = "formfield"><input type="text" name="Util" value=100 id="bUtil" size=10 class="raw"></div>
+
+	<div class = "formfield"><select name="Util_Period" class="per">
+			<option value="Monthly" selected>Monthly</option>
+			<option value="Annual">Annual</option>
+	</select></div>
+	<div class = "formfield"><input type="text" name="UtilAV" value=0 id="bUtilAV" size=10 class="val"></div>
+	<div class = "formfield"><input type="text" name="UtilGr" value=.03 id="bUtilGr" size=10 class="gr"></div>
+
+	<div class = "formlabel2">Wellness:</div>
+	<div class = "formfield"><input type="text" name="Well" value=50 id="bWell" size=10 class="raw"></div>
+	
+	<div class = "formfield"><select name="Well_Period" class="per">
+			<option value="Monthly" selected>Monthly</option>
+			<option value="Annual">Annual</option>
+	</select></div>
+	<div class = "formfield"><input type="text" name="WellAV" value=0 id="bWellAV" size=10 class="val"></div>
+	<div class = "formfield"><input type="text" name="WellGr" value=.03 id="bWellGr" size=10 class="gr"></div>
+
+	<div class = "formlabel2">Transportation:</div>
+	<div class = "formfield"><input type="text" name="Trans" value=200 id="bTrans" size=10 class="raw"></div>
+
+	<div class = "formfield"><select name="Trans_Period" class="per">
+			<option value="Monthly" selected>Monthly</option>
+			<option value="Annual">Annual</option>
+	</select></div>
+	<div class = "formfield"><input type="text" name="TransAV" value=0 id="bTransAV" size=10 class="val"></div>
+	<div class = "formfield"><input type="text" name="TransGr" value=.03 id="bTransGr" size=10 class="gr"></div>
+
+	<div class = "formlabel2">Entertainment:</div>
+	<div class = "formfield"><input type="text" name="Enter" value=100 id="bEnter" size=10 class="raw"></div>
+
+	<div class = "formfield"><select name="Enter_Period" class="per">
+			<option value="Monthly" selected>Monthly</option>
+			<option value="Annual">Annual</option>
+	</select></div>
+	<div class = "formfield"><input type="text" name="EnterAV" value=0 id="bEnterAV" size=10 class="val"></div>
+	<div class = "formfield"><input type="text" name="EnterGr" value=.03 id="bEnterGr" size=10 class="gr"></div>
+
+	<div class = "formlabel2">Merchandise:</div>
+	<div class = "formfield"><input type="text" name="Stuff" value=100 id="bStuff" size=10 class="raw"></div>
+
+	<div class = "formfield"><select name="Stuff_Period" class="per">
+			<option value="Monthly" selected>Monthly</option>
+			<option value="Annual">Annual</option>
+	</select></div>
+	
+	<div class = "formfield"><input type="text" name="StuffAV" value=0 id="bStuffAV" size=10 class="val"></div>
+	<div class = "formfield"><input type="text" name="StuffGr" value=.03 id="bStuffGr" size=10 class="gr"></div>
+
+	<div class = "formlabel2">Travel:</div>
+	<div class = "formfield"><input type="text" name="Travel" value=1000 id="bTravel" size=10 class="raw"></div>
+
+	<div class = "formfield"><select name="Travel_Period" class="per">
+			<option value="Monthly" >Monthly</option>
+			<option value="Annual" selected>Annual</option>
+	</select></div>
+ 
+	<div class = "formfield"><input type="text" name="TravelAV" value=0 id="bTravelAV" size=10 class="val"></div>
+	<div class = "formfield"><input type="text" name="TravelGr" value=.03 id="bTravelGr" size=10 class="gr"></div>
+
+	
+	<div class = "formlabel2">Total:</div>
+	<div class = "formfield"><input type="text" name="bTotal" id="bTotal"></div>
+	<div class = "formfield"><input type="text" name="bTotalFinal" id="bTotalF"></div>
+
+	<div class = "formfield"><input type="button" value= "Sum Budget!" onclick='document.getElementById("bTotal").value=budget()'/></div>
+ 	<div class = "formfield"><input type="button" value= "TestFunction!" onclick='MakeBudgetArray()'/></div>
+	<div class = "formfield"><input type="button" value= "JaSON Test" onclick='JasonTest()'/></div>
+	<div class = "formfield"><input type="button" value= "New SumBudget" onclick='budgetsum()'/></div>
+	<div class = "formfield"><input type="button" value= "Annual Grid" onclick='budgetgrowth()'/></div>
+	<div class = "formfield"><input type="button" value= "MakeTable" onclick='BudgetTable()'/></div>
+
+	<!-- <div class = "formfield"><select name="Food_Period">
+			<option value="Monthly" selected>Monthly</option>
+			<option value="Annual">Annual</option>
+	</select></div>  --->
+
+  </fieldset>
+
+  </form>
+  </div>
+
+
+
+  <p id ="Test_Function">Testing1-2</p>
+  <p id ="budgetjsonstore">BJSONStore</p>
+  <p id ="annualstore">AnualStore</p>
+  <div id ="budtable"></div>
+  
+
+
+
+  <!-- answer was getting 13 from below
+	document.getElementById("answer").innerHTML = 13; -->
+ 
+  
+  
+
+</body>
+</html>
